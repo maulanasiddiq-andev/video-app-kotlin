@@ -40,11 +40,16 @@ import androidx.navigation.NavHostController
 import com.example.videoapp.components.AuthInputComponent
 
 @Composable
-fun LoginScreen(navHostController: NavHostController) {
+fun RegisterScreen(navHostController: NavHostController) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val secondFocusRequester = remember { FocusRequester() }
+    val thirdFocusRequester = remember { FocusRequester() }
+    val fourthFocusRequester = remember { FocusRequester() }
+
     var email by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
     fun submit() {
@@ -65,7 +70,7 @@ fun LoginScreen(navHostController: NavHostController) {
             ) {
                 Spacer(modifier = Modifier.height(50.dp))
                 Text(
-                    "Login",
+                    "Register",
                     style = TextStyle(
                         fontSize = 60.sp,
                         color = Color.White
@@ -113,10 +118,40 @@ fun LoginScreen(navHostController: NavHostController) {
                         thickness = 1.dp
                     )
                     AuthInputComponent(
+                        value = name,
+                        onValueChange = { name = it },
+                        placeholder = "Nama",
+                        modifier = Modifier.focusRequester(secondFocusRequester),
+                        keyboardAction = KeyboardActions(
+                            onNext = {
+                                thirdFocusRequester.requestFocus()
+                            }
+                        )
+                    )
+                    HorizontalDivider(
+                        modifier = Modifier.fillMaxWidth(),
+                        thickness = 1.dp
+                    )
+                    AuthInputComponent(
+                        value = username,
+                        onValueChange = { username = it },
+                        placeholder = "Username",
+                        modifier = Modifier.focusRequester(thirdFocusRequester),
+                        keyboardAction = KeyboardActions(
+                            onNext = {
+                                fourthFocusRequester.requestFocus()
+                            }
+                        )
+                    )
+                    HorizontalDivider(
+                        modifier = Modifier.fillMaxWidth(),
+                        thickness = 1.dp
+                    )
+                    AuthInputComponent(
                         value = password,
                         onValueChange = { password = it },
                         placeholder = "Password",
-                        modifier = Modifier.focusRequester(secondFocusRequester),
+                        modifier = Modifier.focusRequester(fourthFocusRequester),
                         isPassword = true,
                         isLast = true,
                         keyboardAction = KeyboardActions(
@@ -130,7 +165,6 @@ fun LoginScreen(navHostController: NavHostController) {
                 Spacer(modifier = Modifier.height(60.dp))
                 Box(
                     modifier = Modifier
-                        .clickable{submit()}
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(10.dp))
                         .background(Color(0xFF2196f3))
@@ -138,7 +172,7 @@ fun LoginScreen(navHostController: NavHostController) {
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        "Login",
+                        "Register",
                         style = TextStyle(
                             fontSize = 16.sp,
                             color = Color.White
@@ -150,16 +184,16 @@ fun LoginScreen(navHostController: NavHostController) {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Text("Belum punya akun?")
+                    Text("Sudah punya akun?")
                     Spacer(modifier = Modifier.width(5.dp))
                     Text(
-                        "Daftar",
+                        "Login",
                         style = TextStyle(
                             color = Color(0xFF2196f3)
                         ),
                         modifier = Modifier
                             .clickable{
-                                navHostController.navigate("register") {
+                                navHostController.navigate("login") {
                                     popUpTo(0) { inclusive = true }
                                 }
                             }

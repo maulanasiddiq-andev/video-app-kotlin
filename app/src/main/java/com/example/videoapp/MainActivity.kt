@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -39,6 +40,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.videoapp.components.AuthInputComponent
 import android.graphics.Color as AndroidColor
 
 class MainActivity : ComponentActivity() {
@@ -111,35 +113,22 @@ fun LoginScreen() {
                         .background(Color.White, RoundedCornerShape(10.dp))
                         .clip(RoundedCornerShape(10.dp))
                 ) {
-                    TextField(
-                        modifier = Modifier
-                            .fillMaxWidth(),
+                    AuthInputComponent(
                         value = email,
                         onValueChange = { email = it },
-                        placeholder = { Text("Email") },
-                        shape = RectangleShape,
-                        colors = TextFieldDefaults.colors(
-                            focusedIndicatorColor = Color.Gray,
-                            unfocusedIndicatorColor = Color.Gray,
-                            disabledIndicatorColor = Color.Gray,
-                            focusedContainerColor = Color.White,
-                            unfocusedContainerColor = Color.White,
-                        )
-                    )
-                    TextField(
+                        placeholder = "Email",
                         modifier = Modifier
-                            .fillMaxWidth(),
+                    )
+                    HorizontalDivider(
+                        modifier = Modifier.fillMaxWidth(),
+                        thickness = 1.dp
+                    )
+                    AuthInputComponent(
                         value = password,
                         onValueChange = { password = it },
-                        placeholder = { Text("Password") },
-                        shape = RectangleShape,
-                        colors = TextFieldDefaults.colors(
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent,
-                            disabledIndicatorColor = Color.Transparent,
-                            focusedContainerColor = Color.White,
-                            unfocusedContainerColor = Color.White,
-                        )
+                        placeholder = "Password",
+                        modifier = Modifier,
+                        isPassword = true
                     )
                 }
                 Spacer(modifier = Modifier.height(60.dp))
@@ -154,7 +143,7 @@ fun LoginScreen() {
                     Text(
                         "Login",
                         style = TextStyle(
-                            fontSize = 18.sp,
+                            fontSize = 16.sp,
                             color = Color.White
                         )
                     )

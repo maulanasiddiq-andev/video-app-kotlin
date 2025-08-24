@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -33,9 +34,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -60,6 +64,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun LoginScreen() {
     val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
+    val secondFocusRequester = remember { FocusRequester() }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -117,7 +123,12 @@ fun LoginScreen() {
                         value = email,
                         onValueChange = { email = it },
                         placeholder = "Email",
-                        modifier = Modifier
+                        modifier = Modifier,
+                        keyboardAction = KeyboardActions(
+                            onNext = {
+                                secondFocusRequester.requestFocus()
+                            }
+                        )
                     )
                     HorizontalDivider(
                         modifier = Modifier.fillMaxWidth(),
@@ -127,8 +138,14 @@ fun LoginScreen() {
                         value = password,
                         onValueChange = { password = it },
                         placeholder = "Password",
-                        modifier = Modifier,
-                        isPassword = true
+                        modifier = Modifier.focusRequester(secondFocusRequester),
+                        isPassword = true,
+                        isLast = true,
+                        keyboardAction = KeyboardActions(
+                            onDone = {
+
+                            }
+                        )
                     )
                 }
                 Spacer(modifier = Modifier.height(60.dp))

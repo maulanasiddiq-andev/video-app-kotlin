@@ -37,6 +37,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -122,7 +123,8 @@ fun LoginScreen(navHostController: NavHostController, viewModel: LoginViewModel 
                             onNext = {
                                 secondFocusRequester.requestFocus()
                             }
-                        )
+                        ),
+                        keyBoardType = KeyboardType.Email
                     )
                     HorizontalDivider(
                         modifier = Modifier.fillMaxWidth(),

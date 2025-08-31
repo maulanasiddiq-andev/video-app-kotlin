@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.sp
@@ -33,7 +34,8 @@ fun AuthInputComponent(
     modifier: Modifier,
     isPassword: Boolean = false,
     isLast: Boolean = false,
-    keyboardAction: KeyboardActions
+    keyboardAction: KeyboardActions,
+    keyBoardType: KeyboardType = KeyboardType.Text
 ) {
     if (isPassword) {
         var isPasswordVisible by remember { mutableStateOf(false) }
@@ -98,7 +100,8 @@ fun AuthInputComponent(
                 fontSize = 16.sp
             ),
             keyboardOptions = KeyboardOptions.Default.copy(
-                imeAction = if (isLast) ImeAction.Done else ImeAction.Next
+                imeAction = if (isLast) ImeAction.Done else ImeAction.Next,
+                keyboardType = keyBoardType
             ),
             keyboardActions = keyboardAction,
             colors = TextFieldDefaults.colors(

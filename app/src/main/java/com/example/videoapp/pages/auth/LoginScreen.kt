@@ -12,13 +12,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,19 +39,32 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.videoapp.components.AuthInputComponent
+import com.example.videoapp.viewModels.auth.LoginViewModel
+import android.graphics.Color as AndroidColor
 
 @Composable
-fun LoginScreen(navHostController: NavHostController) {
+fun LoginScreen(navHostController: NavHostController, viewModel: LoginViewModel = viewModel()) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val secondFocusRequester = remember { FocusRequester() }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
+    val isLoading = viewModel.isLoading.value
+    val message by viewModel.message
+
+    LaunchedEffect(message) {
+        message?.let {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            viewModel.clearMessage()
+        }
+    }
+
     fun submit() {
-        Toast.makeText(context, "$email, $password", Toast.LENGTH_SHORT).show()
+        viewModel.login(email, password)
     }
 
     Scaffold { padding ->
@@ -137,13 +153,21 @@ fun LoginScreen(navHostController: NavHostController) {
                         .padding(15.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        "Login",
-                        style = TextStyle(
-                            fontSize = 16.sp,
-                            color = Color.White
+                    if (isLoading) {
+                        CircularProgressIndicator(
+                            color = Color(AndroidColor.WHITE),
+                            modifier = Modifier.size(17.dp),
+                            strokeWidth = 3.dp
                         )
-                    )
+                    } else {
+                        Text(
+                            "Login",
+                            style = TextStyle(
+                                fontSize = 16.sp,
+                                color = Color.White
+                            )
+                        )
+                    }
                 }
                 Spacer(modifier = Modifier.height(30.dp))
                 Row(

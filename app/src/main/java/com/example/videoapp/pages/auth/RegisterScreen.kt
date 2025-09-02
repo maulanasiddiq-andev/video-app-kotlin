@@ -12,13 +12,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,11 +40,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.videoapp.components.AuthInputComponent
+import com.example.videoapp.repositories.AuthRepository
+import com.example.videoapp.viewModels.auth.RegisterViewModel
+import com.example.videoapp.viewModels.auth.RegisterViewModelFactory
+import com.example.videoapp.viewModels.auth.rememberRegisterViewModel
 
 @Composable
-fun RegisterScreen(navHostController: NavHostController) {
+fun RegisterScreen(navHostController: NavHostController, repository: AuthRepository) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val secondFocusRequester = remember { FocusRequester() }
@@ -53,8 +61,25 @@ fun RegisterScreen(navHostController: NavHostController) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
+    val viewModel: RegisterViewModel = rememberRegisterViewModel(navHostController, repository = repository)
+
+    val isLoading = viewModel.isLoadingRegister.value
+    val succeed = viewModel.registerSucceed.value
+    val message = viewModel.message.value
+
+    LaunchedEffect(succeed, message) {
+        message?.let {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            viewModel.clearMessage()
+        }
+
+        if (succeed) {
+            navHostController.navigate("otpVerification")
+        }
+    }
+
     fun submit() {
-        Toast.makeText(context, "$email, $password", Toast.LENGTH_SHORT).show()
+        viewModel.register(email, username, name, password)
     }
 
     Scaffold { padding ->
@@ -167,19 +192,28 @@ fun RegisterScreen(navHostController: NavHostController) {
                 Spacer(modifier = Modifier.height(60.dp))
                 Box(
                     modifier = Modifier
+                        .clickable{submit()}
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(10.dp))
                         .background(Color(0xFF2196f3))
                         .padding(15.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        "Register",
-                        style = TextStyle(
-                            fontSize = 16.sp,
-                            color = Color.White
+                    if (isLoading) {
+                        CircularProgressIndicator(
+                            color = Color.White,
+                            modifier = Modifier.size(17.dp),
+                            strokeWidth = 3.dp
                         )
-                    )
+                    } else {
+                        Text(
+                            "Register",
+                            style = TextStyle(
+                                fontSize = 16.sp,
+                                color = Color.White
+                            )
+                        )
+                    }
                 }
                 Spacer(modifier = Modifier.height(30.dp))
                 Row(

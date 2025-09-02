@@ -1,6 +1,5 @@
 package com.example.videoapp.pages.auth
 
-import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -45,26 +44,40 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.videoapp.components.AuthInputComponent
 import com.example.videoapp.local.TokenManager
+import com.example.videoapp.repositories.AuthRepository
 import com.example.videoapp.viewModels.auth.LoginViewModel
 import com.example.videoapp.viewModels.auth.LoginViewModelFactory
 import android.graphics.Color as AndroidColor
 
 @Composable
-fun LoginScreen(navHostController: NavHostController, tokenManager: TokenManager, context: Context = LocalContext.current) {
+fun LoginScreen(
+    navHostController: NavHostController,
+    tokenManager: TokenManager,
+    repository: AuthRepository
+) {
+    val context = LocalContext.current
     val focusManager = LocalFocusManager.current
+
     val secondFocusRequester = remember { FocusRequester() }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    val viewModel: LoginViewModel = viewModel(factory = LoginViewModelFactory(tokenManager, navHostController))
+    val viewModel: LoginViewModel = viewModel(factory = LoginViewModelFactory(tokenManager, repository))
 
     val isLoading = viewModel.isLoading.value
     val message by viewModel.message
+    val succeed = viewModel.succeed.value
 
-    LaunchedEffect(message) {
+    LaunchedEffect(message, succeed) {
         message?.let {
             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
             viewModel.clearMessage()
+        }
+
+        if (succeed) {
+            navHostController.navigate("videoList") {
+                popUpTo(0) { inclusive = true }
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 package com.example.videoapp.pages.auth
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,6 +23,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -32,6 +34,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -39,16 +42,47 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.example.videoapp.repositories.AuthRepository
+import com.example.videoapp.viewModels.auth.rememberRegisterViewModel
 import kotlin.collections.listOf
 
 @Composable
-fun OtpVerificationScreen() {
+fun OtpVerificationScreen(navHostController: NavHostController, repository: AuthRepository) {
+    val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     var values by remember { mutableStateOf(listOf("", "", "", "")) }
     val focusRequesters = remember {
         listOf(FocusRequester(), FocusRequester(), FocusRequester(), FocusRequester())
     }
-    var focusedIndex by remember { mutableStateOf(-1) }
+    var focusedIndex by remember { mutableIntStateOf(-1) }
+
+    val viewModel = rememberRegisterViewModel(navHostController, repository = repository)
+//    val isLoading = viewModel.isLoadingOtp.value
+    val succeed = viewModel.otpSucceed.value
+    val message = viewModel.message.value
+
+    LaunchedEffect(message, succeed) {
+        message?.let {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            viewModel.clearMessage()
+        }
+
+        if (succeed) {
+            navHostController.navigate("login") {
+                popUpTo(0) { inclusive = true }
+            }
+        }
+    }
+
+    fun submit() {
+        var value = ""
+        values.forEach {
+            value += it
+        }
+
+        viewModel.checkOtpValidation(value)
+    }
 
     Scaffold { padding ->
         Column(
@@ -128,6 +162,7 @@ fun OtpVerificationScreen() {
                                             focusRequesters[index + 1].requestFocus()
                                         } else {
                                             focusManager.clearFocus()
+                                            submit()
                                         }
                                     }
                                 },

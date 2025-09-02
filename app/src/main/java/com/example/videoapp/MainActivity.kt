@@ -5,17 +5,21 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -25,13 +29,26 @@ import androidx.navigation.compose.NavHost
 import com.example.videoapp.local.TokenManager
 import com.example.videoapp.local.dataStore
 import com.example.videoapp.pages.auth.LoginScreen
+import com.example.videoapp.pages.auth.OtpVerificationScreen
 import com.example.videoapp.pages.auth.RegisterScreen
 import com.example.videoapp.pages.video.VideoListScreen
+import com.example.videoapp.repositories.AuthRepository
+import com.example.videoapp.services.AuthService
+import com.example.videoapp.services.RetrofitInstance
 import com.example.videoapp.viewModels.auth.CheckTokenViewModel
 import com.example.videoapp.viewModels.auth.CheckTokenViewModelFactory
+import com.example.videoapp.viewModels.auth.LoginViewModel
+import kotlin.getValue
 import android.graphics.Color as AndroidColor
 
+@ExperimentalMaterial3Api
 class MainActivity : ComponentActivity() {
+    private val tokenManager by lazy { TokenManager(applicationContext.dataStore) }
+    private val retrofit by lazy { RetrofitInstance.create(tokenManager) }
+
+    private val authService by lazy { retrofit.create(AuthService::class.java) }
+    private val authRepository by lazy { AuthRepository(authService) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge(
@@ -40,7 +57,6 @@ class MainActivity : ComponentActivity() {
             )
         )
 
-        val tokenManager = TokenManager(applicationContext.dataStore)
         setContent {
             val navController = rememberNavController()
             val checkTokenViewModel: CheckTokenViewModel = viewModel(factory = CheckTokenViewModelFactory(tokenManager))
@@ -48,9 +64,10 @@ class MainActivity : ComponentActivity() {
 
             if (startDestination != null) {
                 NavHost(navController = navController, startDestination = startDestination!!) {
-                    animatedComposable("login", navController) { LoginScreen(navController, tokenManager = tokenManager) }
-                    animatedComposable("register", navController) { RegisterScreen(navController) }
-                    animatedComposable("videoList", navController) { VideoListScreen(navController) }
+                    animatedComposable("login", navController) { LoginScreen(navController, tokenManager = tokenManager, repository = authRepository) }
+                    animatedComposable("register", navController) { RegisterScreen(navController, repository = authRepository) }
+                    animatedComposable("videoList", navController) { VideoListScreen(navController, tokenManager = tokenManager) }
+                    animatedComposable("otpVerification", navController) { OtpVerificationScreen(navController, repository = authRepository) }
                 }
             } else {
                 Box(modifier = Modifier.fillMaxSize().background(Color(0xFF2196f3))) {

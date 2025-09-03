@@ -75,6 +75,7 @@ dependencies {
     implementation(libs.lifecycle.runtime)
     implementation(libs.lifecycle.compose)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.io.coil.kt)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -31,6 +31,11 @@ android {
             "BASE_URL",
             "\"${localProperties.getProperty("BASE_URL") ?: ""}\""
         )
+        buildConfigField(
+            "String",
+            "FILE_URL",
+            "\"${localProperties.getProperty("FILE_URL") ?: ""}\""
+        )
     }
 
     buildTypes {

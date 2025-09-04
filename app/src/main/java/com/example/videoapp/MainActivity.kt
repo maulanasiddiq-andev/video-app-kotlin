@@ -33,8 +33,10 @@ import com.example.videoapp.pages.auth.OtpVerificationScreen
 import com.example.videoapp.pages.auth.RegisterScreen
 import com.example.videoapp.pages.video.VideoListScreen
 import com.example.videoapp.repositories.AuthRepository
+import com.example.videoapp.repositories.VideoRepository
 import com.example.videoapp.services.AuthService
 import com.example.videoapp.services.RetrofitInstance
+import com.example.videoapp.services.VideoService
 import com.example.videoapp.viewModels.auth.CheckTokenViewModel
 import com.example.videoapp.viewModels.auth.CheckTokenViewModelFactory
 import com.example.videoapp.viewModels.auth.LoginViewModel
@@ -48,6 +50,9 @@ class MainActivity : ComponentActivity() {
 
     private val authService by lazy { retrofit.create(AuthService::class.java) }
     private val authRepository by lazy { AuthRepository(authService) }
+
+    private val videoService by lazy { retrofit.create(VideoService::class.java) }
+    private val videoRepository by lazy { VideoRepository(videoService) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +71,7 @@ class MainActivity : ComponentActivity() {
                 NavHost(navController = navController, startDestination = startDestination!!) {
                     animatedComposable("login", navController) { LoginScreen(navController, tokenManager = tokenManager, repository = authRepository) }
                     animatedComposable("register", navController) { RegisterScreen(navController, repository = authRepository) }
-                    animatedComposable("videoList", navController) { VideoListScreen(navController, tokenManager = tokenManager) }
+                    animatedComposable("videoList", navController) { VideoListScreen(navController, tokenManager = tokenManager, repository = videoRepository) }
                     animatedComposable("otpVerification", navController) { OtpVerificationScreen(navController, repository = authRepository) }
                 }
             } else {

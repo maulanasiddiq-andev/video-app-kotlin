@@ -16,6 +16,9 @@ kotlinx-coroutines = "1.7.3"
 lifecycle = "2.6.2"
 datastore = "1.1.1"
 coil-kt = "2.4.0"
+ucrop = "2.2.11-native"
+appcompat = "1.7.0"
+transition = "1.5.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -43,6 +46,9 @@ lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", versi
 lifecycle-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 io-coil-kt = { module = "io.coil-kt:coil-compose", version.ref = "coil-kt" }
+github-yalantis-ucrop = { module = "com.github.yalantis:ucrop", version.ref = "ucrop" }
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+androidx-transition = { module = "androidx.transition:transition", version.ref = "transition" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

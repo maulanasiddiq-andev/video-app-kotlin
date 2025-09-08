@@ -31,6 +31,7 @@ import com.example.videoapp.local.dataStore
 import com.example.videoapp.pages.auth.LoginScreen
 import com.example.videoapp.pages.auth.OtpVerificationScreen
 import com.example.videoapp.pages.auth.RegisterScreen
+import com.example.videoapp.pages.video.VideoCreateScreen
 import com.example.videoapp.pages.video.VideoListScreen
 import com.example.videoapp.repositories.AuthRepository
 import com.example.videoapp.repositories.VideoRepository
@@ -71,8 +72,9 @@ class MainActivity : ComponentActivity() {
                 NavHost(navController = navController, startDestination = startDestination!!) {
                     animatedComposable("login", navController) { LoginScreen(navController, tokenManager = tokenManager, repository = authRepository) }
                     animatedComposable("register", navController) { RegisterScreen(navController, repository = authRepository) }
-                    animatedComposable("videoList", navController) { VideoListScreen(navController, tokenManager = tokenManager, repository = videoRepository) }
                     animatedComposable("otpVerification", navController) { OtpVerificationScreen(navController, repository = authRepository) }
+                    animatedComposable("videoList", navController) { VideoListScreen(navController, tokenManager = tokenManager, repository = videoRepository) }
+                    animatedComposable("videoCreate", navController) { VideoCreateScreen(navController, repository = videoRepository) }
                 }
             } else {
                 Box(modifier = Modifier.fillMaxSize().background(Color(0xFF2196f3))) {

@@ -58,6 +58,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.example.videoapp.components.InputComponent
 import com.example.videoapp.components.SwitchComponent
 import com.example.videoapp.repositories.VideoRepository
 import com.example.videoapp.requests.VideoCreateRequest
@@ -254,57 +255,24 @@ fun VideoCreateScreen(navHostController: NavHostController, repository: VideoRep
                     }
                 }
                 item {
-                    TextField(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        value = title,
-                        onValueChange = {
-                            title = it
-                        },
-                        placeholder = {
-                            Text(
-                                "Judul",
-                                style = TextStyle(
-                                    fontSize = 17.sp
-                                )
-                            )
-                        },
-                        textStyle = TextStyle(
-                            fontSize = 17.sp
-                        ),
-                        singleLine = true,
-                        maxLines = 1,
-                        colors = TextFieldDefaults.colors(
-                            focusedIndicatorColor = Color(0xFF2196f3),
-                            focusedContainerColor = Color.Transparent,
-                            unfocusedContainerColor = Color.Transparent
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(15.dp)
+                    ) {
+                        InputComponent(
+                            modifier = Modifier.fillMaxWidth(),
+                            placeholder = "Judul",
+                            value = title,
+                            onValueChange = { title = it },
+                            singleLine = true,
+                            maxLines = 1
                         )
-                    )
-                }
-                item {
-                    TextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        value = description,
-                        onValueChange = {
-                            description = it
-                        },
-                        placeholder = {
-                            Text(
-                                "Deskripsi",
-                                style = TextStyle(
-                                    fontSize = 17.sp
-                                )
-                            )
-                        },
-                        textStyle = TextStyle(
-                            fontSize = 17.sp
-                        ),
-                        colors = TextFieldDefaults.colors(
-                            focusedIndicatorColor = Color(0xFF2196f3),
-                            focusedContainerColor = Color.Transparent,
-                            unfocusedContainerColor = Color.Transparent
+                        InputComponent(
+                            modifier = Modifier.fillMaxWidth(),
+                            placeholder = "Deskripsi",
+                            value = description,
+                            onValueChange = { description = it }
                         )
-                    )
+                    }
                 }
                 item {
                     Column(
@@ -322,13 +290,6 @@ fun VideoCreateScreen(navHostController: NavHostController, repository: VideoRep
                             value = isDislikeVisible,
                             onValueChange = { isDislikeVisible = it }
                         )
-                    }
-                }
-                item {
-                    Button(
-                        onClick = { submit() }
-                    ) {
-                        Text("Upload")
                     }
                 }
             }

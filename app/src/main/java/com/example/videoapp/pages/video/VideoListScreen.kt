@@ -18,11 +18,8 @@ import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
@@ -38,12 +35,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.videoapp.BuildConfig
+import com.example.videoapp.components.TopBarComponent
+import com.example.videoapp.components.TopBarMenu
 import com.example.videoapp.local.TokenManager
 import com.example.videoapp.repositories.VideoRepository
 import com.example.videoapp.viewModels.video.VideoListViewModel
 import com.example.videoapp.viewModels.video.VideoListViewModelFactory
 import kotlinx.coroutines.launch
-import android.graphics.Color as AndroidColor
 
 @ExperimentalMaterial3Api
 @Composable
@@ -64,20 +62,18 @@ fun VideoListScreen(navHostController: NavHostController, tokenManager: TokenMan
     }
 
     LaunchedEffect(Unit) {
-        viewModel.getVideos()
+        if (videos.isEmpty()) {
+            viewModel.getVideos()
+        }
     }
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Video List") },
-                colors = TopAppBarDefaults.mediumTopAppBarColors(
-                    containerColor = Color(0xFF2196f3),
-                    titleContentColor = Color(AndroidColor.WHITE),
-                    actionIconContentColor = Color(0xFFFFFFFF)
-                ),
-                actions = {
-                    IconButton(
+            TopBarComponent(
+                "List Video",
+                actions = listOf(
+                    TopBarMenu(
+                        Icons.Default.Logout,
                         onClick = {
                             scope.launch {
                                 tokenManager.clearToken()
@@ -87,13 +83,8 @@ fun VideoListScreen(navHostController: NavHostController, tokenManager: TokenMan
                                 popUpTo("videoList") { inclusive = true }
                             }
                         }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Logout,
-                            contentDescription = null
-                        )
-                    }
-                }
+                    )
+                )
             )
         }
     ) { padding ->
@@ -104,7 +95,9 @@ fun VideoListScreen(navHostController: NavHostController, tokenManager: TokenMan
         ) {
             Box(
                 modifier = Modifier
-                    .clickable{}
+                    .clickable{
+                        navHostController.navigate("videoCreate")
+                    }
                     .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {

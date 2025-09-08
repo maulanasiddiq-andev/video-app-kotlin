@@ -19,6 +19,7 @@ coil-kt = "2.4.0"
 ucrop = "2.2.11-native"
 appcompat = "1.7.0"
 transition = "1.5.1"
+exoplayer = "1.4.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -49,6 +50,11 @@ io-coil-kt = { module = "io.coil-kt:coil-compose", version.ref = "coil-kt" }
 github-yalantis-ucrop = { module = "com.github.yalantis:ucrop", version.ref = "ucrop" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-transition = { module = "androidx.transition:transition", version.ref = "transition" }
+androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "exoplayer" }
+androidx-media3-ui = { module = "androidx.media3:media3-ui", version.ref = "exoplayer" }
+androidx-media3-exoplayer-dash = { module = "androidx.media3:media3-exoplayer-dash", version.ref = "exoplayer" }
+androidx-media3-exoplayer-hls = { module = "androidx.media3:media3-exoplayer-hls", version.ref = "exoplayer" }
+androidx-media3-exoplayer-smoothstreaming = { module = "androidx.media3:media3-exoplayer-smoothstreaming", version.ref = "exoplayer" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -136,7 +136,7 @@ fun VideoListScreen(navHostController: NavHostController, tokenManager: TokenMan
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .aspectRatio(16f / 9f),
-                                model = "${BuildConfig.FILE_URL}${video.thumbnailUrl}",
+                                model = video.thumbnailUrl,
                                 contentDescription = "Picture"
                             )
                             Column(
